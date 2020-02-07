@@ -1,0 +1,67 @@
+-- How many entries in the database are from Africa?'
+SELECT count(*)
+FROM countries
+WHERE continent = 'Africa';
+-- 56
+
+-- What was the total population of Oceania in 2005?
+SELECT sum(population_years.population)
+FROM population_years
+JOIN countries
+	ON population_years.country_id = countries.id
+WHERE population_years.year = 2005
+	AND countries.continent = 'Oceania';
+-- 32.66417
+
+-- What is the average population of countries in South America in 2003?
+SELECT round(avg(population_years.population),2)
+FROM population_years
+JOIN countries
+	ON population_years.country_id = countries.id
+WHERE population_years.year = 2003
+	AND countries.continent = 'South America';
+-- 25.89M
+
+-- What country had the smallest population in 2007?
+SELECT population_years.population,
+		countries.name
+FROM population_years
+JOIN countries
+	ON population_years.country_id = countries.id
+WHERE population_years.year = 2007
+	and population_years.population is not NULL
+ORDER by 1 ASC
+limit 1;
+-- Niue 2,116
+
+-- What is the average population of Poland during the time period covered by this dataset?
+SELECT round(avg(population_years.population),2)
+FROM population_years
+JOIN countries
+	on population_years.country_id = countries.id
+WHERE countries.name = 'Poland';
+-- 38.56M
+
+-- How many countries have the word "The" in their name?
+SELECT count(*)
+FROM countries
+WHERE name like '%The%';
+-- 4
+
+-- What was the total population of each continent in 2010?
+SELECT countries.continent,
+		round(sum(population_years.population), 2) as 'Population'
+FROM population_years
+JOIN countries
+	on population_years.country_id = countries.id
+WHERE year = 2010
+GROUP by countries.continent
+ORDER by 2 DESC;
+
+-- Continent		Population
+-- Asia 			4133.09
+-- Africa			1015.48
+-- Europe			723.06
+-- North America	539.79
+-- South America	396.58
+-- Oceania			34.96
