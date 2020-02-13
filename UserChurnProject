@@ -1,0 +1,82 @@
+-- Take a look at the first 100 rows of data in the subscriptions table. How many different segments do you see?--
+select *
+from subscriptions
+limit 100;
+-- two different segments but below code would be more useful:
+select distinct segment
+        , count (id)
+from subscriptions
+group by 1
+order by 1;
+-- so, we havetwo segments (30 and 87) with 50% each.
+
+--2 Determine the range of months of data provided. Which months will you be able to calculate churn for?
+
+select min(subscription_start),
+      max(subscription_start)
+from subscriptions;
+-- we will be able to calculate chirn rate for Jan - March 2017.
+
+--You’ll be calculating the churn rate for both segments (87 and 30) over the first 3 months of 2017 (you can’t calculate it for December, since there are no subscription_end values yet). To get started, create a temporary table of months.
+with months as
+(select
+'2017-01-01' as first_day,
+'2017-01-31' as last_day
+union
+select
+'2017-02-01' as first_day,
+'2017-02-28' as last_day
+union
+select
+'2017-03-01' as first_day,
+'2017-03-31' as last_day),
+cross_join as
+(select *
+from subscriptions
+cross join months),
+status as
+(select id,
+        first_day as 'month',
+        case
+           when (segment = '87') and subscription_start < first_day and (subscription_end > last_day or subscription_end is null)
+           then 1
+           else 0 end as 'is_active_87',
+          case
+           when (segment = '30') and subscription_start < first_day and (subscription_end > last_day or subscription_end is null)
+           then 1
+           else 0 end as 'is_active_30',
+          case
+           when (segment = '87') and subscription_start < first_day and (subscription_end between first_day and last_day)
+           then 1
+           else 0 end as 'is_canceled_87',
+          case
+           when (segment = '30') and subscription_start < first_day and (subscription_end between first_day and last_day)
+           then 1
+           else 0 end as 'is_canceled_30'
+from cross_join
+),
+status_aggregate as
+(select month,
+       sum(is_active_87) as sum_active_87,
+       sum(is_canceled_87) as sum_canceled_87,
+       sum(is_active_30) as sum_active_30,
+       sum(is_canceled_87) as sum_canceled_30
+ from status
+group by 1
+order by 1),
+churn_rate as
+(select month,
+100.0*sum_canceled_87/sum_active_87 as churn_87,
+100.0*sum_canceled_30/sum_active_30 as churn_30
+from status_aggregate
+group by 1
+order by 1)
+select * 
+from status_aggregate
+join churn_rate
+on status_aggregate.month = churn_rate.month;
+
+-- churn rate for segment 87 is 33.49%, 46.39% and 91.17% for months January to March, while for segment 30 thy are 26.02%, 30.83% and 40.69%.
+
+--How would you modify this code to support a large number of segments?
+-- I think, calculus per segment can be performed, grouping the data per segment instead of coding it.
