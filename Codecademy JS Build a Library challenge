@@ -1,0 +1,136 @@
+// Creatinh Media class
+class Media {
+  constructor(title) {
+    this._title = title;
+    this._isCheckedOut = false;
+    this._ratings = [];
+
+  }
+  
+  get title() {
+    return this_title;
+  }
+
+  get isCheckedOut() {
+    return this._isCheckedOut;
+  }
+
+  get ratings() {
+    return this._ratings;
+  }
+
+  set isCheckedOut (status) {
+    this._isCheckedOut = status;
+  }
+
+  toggleCheckOutStatus() {
+    this._isCheckedOut = !this._isCheckedOut;
+  }
+
+  getAverageRating () {
+    const reducer = (currentSum, rating) => currentSum + rating;
+    return this.ratings.reduce(reducer) / this.ratings.length;
+  }
+
+  addRating (newRating) {
+    if (typeof newRating === 'number' & newRating <=5 & newRating >=1) {
+    this.ratings.push(newRating);
+    }
+    else {
+      console.log('Ratings can only be integer numbers between 1 and 5, please try again!')
+    }
+  }
+
+}
+
+// Creating Book class, child of Media class
+class Book extends Media {
+  constructor(author, title, pages) {
+    super(title);
+    this._author = author;
+    this._pages = pages;
+
+  }
+  get author() {
+    return this._author;
+  }
+
+  get pages() {
+    return this.pages;
+  }
+}
+
+// Creating Movie class, child of Media class
+class Movie extends Media {
+  constructor(director, title, runTime) {
+    super(title);
+    this._director = director;
+    this._runTime = runTime;
+
+  }
+
+  get director() {
+    return this._director;
+  }
+
+  get runTime() {
+    return this.runTime;
+  }
+
+}
+
+// Creating CD classm, child of Media class
+class CD extends Media {
+
+  constructor (title, tracklist, artist, duration) {
+    super(title);
+    this._tracklist = tracklist;
+    this._artist = artist;
+    this._duration = duration;
+
+  }
+  
+  get tracklist() {
+    return this._tracklist;
+  }
+
+  get artist() {
+    return this._artist;
+  }
+
+  get duration() {
+    return this.duration;
+  }
+
+  shuffle() {
+  for (let i = this.tracklist.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [this.tracklist[i], this.tracklist[j]] = [this.tracklist[j], this.tracklist[i]];
+  }
+}
+
+}
+
+// testing the code
+const historyOfEverything = new Book('Bill Bryson', 'A Short History of Nearly Everything', 544);
+historyOfEverything.toggleCheckOutStatus();
+console.log(historyOfEverything.isCheckedOut);
+historyOfEverything.addRating(4);
+historyOfEverything.addRating(5);
+historyOfEverything.addRating(5);
+console.log(historyOfEverything.getAverageRating());
+
+const speed = new Movie('Jan de Bont', 'Speed', 116);
+speed.toggleCheckOutStatus();
+console.log(speed.isCheckedOut);
+speed.addRating(1);
+speed.addRating('one');
+speed.addRating(5);
+console.log(speed.getAverageRating());
+
+//this is an imaginary song list used to test the shuffle option
+let arr = ['sbs', 'saoa', 'dgjsjkgbda', 'djbgjksdb', 'dsgj'];
+
+const bsbLastAlbum = new CD('Baby one more time', ['sbs', 'saoa', 'dgjsjkgbda', 'djbgjksdb', 'dsgj'], 'Back Street Boys', 62);
+bsbLastAlbum.shuffle();
+console.log(bsbLastAlbum.tracklist);
