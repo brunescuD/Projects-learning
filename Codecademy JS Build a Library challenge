@@ -134,3 +134,38 @@ let arr = ['sbs', 'saoa', 'dgjsjkgbda', 'djbgjksdb', 'dsgj'];
 const bsbLastAlbum = new CD('Baby one more time', ['sbs', 'saoa', 'dgjsjkgbda', 'djbgjksdb', 'dsgj'], 'Back Street Boys', 62);
 bsbLastAlbum.shuffle();
 console.log(bsbLastAlbum.tracklist);
+
+
+/*Creating the Catalog class. it should hold next properties:
+ - itemNames - an empty array
+ - itemTitles - an empty array
+ - numberofItems - an integer
+ we should have a getter for every property and a method addNewItem that will populate itemNames and itemTitles arrays and add 1 to numberOfItems
+
+*/
+class Catalog {
+  constructor(itemNames, itemTitles) {
+    this._itemNames = [];
+    this._itemTitles = [];
+    this._numberOfItems = 0;
+    
+  }
+
+  get itemNames() {
+    return this._itemNames;
+  }
+  
+  get itemTitles() {
+    return this._itemTitles;
+  }
+
+  get numberOfItems() {
+    return this.numberOfItems;
+  }
+
+  addItemToCatalog(itemName, ItemTitle) {
+    this.itemNames.push(itemName);
+    this.itemTitles.push(itemTitle);
+    this.numberOfItems ++;
+  }
+}
