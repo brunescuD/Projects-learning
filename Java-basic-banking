@@ -1,0 +1,117 @@
+import java.util.Scanner;
+
+public class BankingApplication {
+    public static void main (String[] args){
+        //TODO Auto-generated method stub
+        BankAccount account1 = new BankAccount("Ion Popescu", "ROUB0001");
+        account1.showMenu();
+
+    }
+}
+
+class BankAccount{
+    int balance;
+    int previousTransaction;
+    String customerName;
+    String customerId;
+
+    protected BankAccount(String cName, String cId){
+        customerName = cName;
+        customerId = cId;
+    }
+
+    protected void deposit(int amount){
+        if(amount != 0){
+            balance += amount;
+            previousTransaction = amount;
+        }
+    }
+
+    protected void withdraw(int amount){
+        if (amount != 0){
+            balance -= amount;
+            previousTransaction -= amount;
+        }
+    }
+
+    protected void getPreviousTransaction(){
+        if (previousTransaction>0){
+            System.out.println("Deposited: " + previousTransaction);
+        }
+        else if (previousTransaction<0){
+            System.out.println("Withdrawn: " + Math.abs(previousTransaction));
+        }
+        else {
+            System.out.println("No previous transactions.");
+        }
+    }
+
+    protected void showMenu(){
+        char option = '\0';
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome, "+ customerName);
+        System.out.println("Your ID is: " + customerId);
+        System.out.println("");
+        System.out.println("A. Check balance");
+        System.out.println("B. Deposit");
+        System.out.println("C. Withdraw");
+        System.out.println("D. Check previous transaction");
+        System.out.println("E. Exit");
+
+        do {
+            System.out.println("=====================================================");
+            System.out.println("Please enter an option:");
+            System.out.println("=====================================================");
+            option = scanner.next().charAt(0);
+            System.out.println("");
+
+            switch (option) {
+                case 'A':
+                    System.out.println("=====================================================");
+                    System.out.println("Balance = " + balance);
+                    System.out.println("=====================================================");
+                    System.out.println("");
+                    break;
+
+                case 'B':
+                    System.out.println("Please enter the amount to deposit.");
+                    System.out.println("-----------------------------------------------------");
+                    int depositAmount = scanner.nextInt();
+                    deposit(depositAmount);
+                    System.out.println("-----------------------------------------------------");
+                    System.out.println("");
+                    break;
+
+                case 'C':
+                    System.out.println("Please enter the amount to withdraw.");
+                    System.out.println("-----------------------------------------------------");
+                    int withdrawAmount = scanner.nextInt();
+                    withdraw(withdrawAmount);
+                    System.out.println("-----------------------------------------------------");
+                    System.out.println("");
+                    break;
+
+                case 'D':
+                    System.out.println("-----------------------------------------------------");
+                    getPreviousTransaction();
+                    System.out.println("-----------------------------------------------------");
+                    System.out.println("");
+                    break;
+
+                case 'E':
+                    System.out.println("*****************************************************");
+                    break;
+
+                default:
+                    System.out.println("Invalid Option. Please try again with a valid option.");
+                    break;
+
+            }
+        }
+        while (option !='E');
+
+        System.out.println("Thank you for using our services!");
+
+    }
+}
